@@ -2,6 +2,7 @@ const commandParser = require("./commandHandling/commandParser");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./config.json");
+const tagFunctions = require("./commandHandling/tagCommandHandlers.js");
 
 /**
  * Discord API function - It creates a websocket connection for the bot to operate on.
@@ -9,10 +10,11 @@ const config = require("./config.json");
 client.login(config.token);
 
 /**
- * Event handler for when the bot is ready and connected. Prints out some basic data on the server it's in.
+ * Event handler for when the bot is ready and connected. Prints out some basic data on the server it's in, and brings up the database for use.
  */
 client.on("ready", () => {
-	console.log("I'm connected and listening to " + client.channels.size + " channels in " + client.guilds.size + " servers.");
+	client.user.setActivity("King of the Digital World.");
+	tagFunctions.initDB();
 });	
 
 /**
@@ -25,8 +27,8 @@ client.on("message", async message => {
 		const args = message.content.slice(config.prefix.length).trim().split(" ");
 		const command = args.shift().toLowerCase();
 		message.channel.startTyping();
-		if(!await commandParser.parseCommand(message, command, args)){
-	    	message.channel.send("Invalid command. Type -help for a list of valid commands");
+		if(!await commandParser.parseCommand(message, command, args, client)){
+	    	message.channel.send("Invalid command. Type !help for a list of valid commands");
 		}
 		message.channel.stopTyping();
 	}
