@@ -85,7 +85,7 @@ async function handleInput(target, info){
         reply.delete();
     })
     .catch(collected => {
-        target.channel.send("You're taking too long!");
+        target.channel.send("Sorry, your request has timed out. Please try again.");
     })
 	sentMessage.delete();
     return(success);
